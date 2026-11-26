@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ops Radar · The Ops Table</title>
+<meta name="description" content="Daily operations and logistics headlines from India, the Gulf, Southeast Asia, Europe and North America.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script src="config.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="container">
+    <a class="logo" href="./"><span class="logo-mark" aria-hidden="true"></span><span data-brand>The Ops Table</span></a>
+    <nav class="links" aria-label="Main"><a href="./#what">What you get</a><a href="./#chapters">Chapters</a><a href="radar.html" aria-current="page">Ops Radar</a></nav>
+    <a class="btn primary" data-apply href="./#apply">Apply to join</a>
+  </div>
+</header>
+<main>
+  <section class="hero" style="padding-bottom:24px">
+    <div class="container">
+      <div class="eyebrow">Ops Radar · updated daily</div>
+      <h1 style="max-width:18ch">What operations leaders are reading today.</h1>
+      <p class="lead">Headlines on last mile, warehousing, quick commerce and supply chain from five regions. Each one links to its original source.</p>
+      <p class="mono" id="updated" style="color:var(--ink-2);font-size:14px;margin:0"></p>
+      <div class="tabs" id="tabs" role="group" aria-label="Region"></div>
+      <ul class="news" id="news"><li class="empty">Loading headlines…</li></ul>
+    </div>
+  </section>
+</main>
+<footer><div class="container"><span>© <span id="yr"></span> <span data-brand>The Ops Table</span></span><span><a href="./">Home</a></span></div></footer>
+<script>
+(function(){
+  var c = window.OPS_CONFIG || {};
+  if(c.BRAND_NAME){ document.querySelectorAll("[data-brand]").forEach(function(s){ s.textContent=c.BRAND_NAME; }); }
+  if(c.APPLY_FORM_URL){ document.querySelectorAll("[data-apply]").forEach(function(a){ a.href=c.APPLY_FORM_URL; a.target="_blank"; a.rel="noopener"; }); }
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  var data=null, current="All";
+  function esc(s){ return String(s||"").replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];}); }
+  function ago(iso){ if(!iso) return ""; var h=Math.round((Date.now()-new Date(iso).getTime())/36e5); return h<1?"just now":h<24?h+"h ago":Math.round(h/24)+"d ago"; }
+  function render(){
+    var regions = Object.keys(data.regions||{});
+    document.getElementById("tabs").innerHTML = ["All"].concat(regions).map(function(r){ return '<button type="button" aria-pressed="'+(r===current)+'" data-r="'+esc(r)+'">'+esc(r)+'</button>'; }).join("");
+    var items=[]; regions.forEach(function(r){ if(current==="All"||current===r) (data.regions[r]||[]).forEach(function(it){ items.push(Object.assign({region:r},it)); }); });
+    items.sort(function(a,b){ return (b.published||"").localeCompare(a.published||""); });
+    document.getElementById("news").innerHTML = items.length ? items.map(function(it){
+      return '<li><div><a href="'+esc(it.link)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a><div class="meta">'+esc(it.source||"Source")+(it.published?" · "+ago(it.published):"")+'</div></div><span class="region">'+esc(it.region)+'</span></li>';
+    }).join("") : '<li class="empty">No headlines for this region today.</li>';
+  }
+  document.getElementById("tabs").addEventListener("click",function(e){ var b=e.target.closest("[data-r]"); if(!b) return; current=b.dataset.r; render(); });
+  fetch("data/news.json",{cache:"no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }).then(function(d){
+    data=d; document.getElementById("updated").textContent = d.updated ? "Last updated "+new Date(d.updated).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+    render();
+  }).catch(function(){ document.getElementById("news").innerHTML='<li class="empty">Headlines are not available yet. They appear after the first daily update.</li>'; });
+})();
+</script>
+</body>
+</html>

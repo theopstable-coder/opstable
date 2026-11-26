@@ -1,0 +1,21 @@
+{
+  "keywords": ["logistics", "last mile", "last-mile", "delivery", "warehouse", "warehousing", "fulfilment", "fulfillment", "supply chain", "quick commerce", "q-commerce", "courier", "parcel", "freight", "e-commerce", "3pl"],
+  "max_items_per_region": 12,
+  "regions": {
+    "India": [
+      "https://news.google.com/rss/search?q=%22last+mile%22+OR+warehousing+OR+%22quick+commerce%22+logistics+India+when:2d&hl=en-IN&gl=IN&ceid=IN:en"
+    ],
+    "GCC": [
+      "https://news.google.com/rss/search?q=logistics+OR+%22last+mile%22+OR+warehousing+UAE+OR+Saudi+when:2d&hl=en-AE&gl=AE&ceid=AE:en"
+    ],
+    "Southeast Asia": [
+      "https://news.google.com/rss/search?q=logistics+OR+%22last+mile%22+OR+warehousing+Singapore+OR+Indonesia+OR+Vietnam+when:2d&hl=en-SG&gl=SG&ceid=SG:en"
+    ],
+    "Europe": [
+      "https://news.google.com/rss/search?q=%22last+mile%22+OR+parcel+OR+%22warehouse+automation%22+logistics+Europe+OR+UK+when:2d&hl=en-GB&gl=GB&ceid=GB:en"
+    ],
+    "North America": [
+      "https://news.google.com/rss/search?q=%22last+mile%22+OR+parcel+OR+fulfillment+logistics+when:2d&hl=en-US&gl=US&ceid=US:en"
+    ]
+  }
+}
